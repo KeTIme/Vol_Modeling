@@ -1,3 +1,3 @@
 # Volatility Modeling through Online ML Approaches
-Machine Learing Course Project
+Machine Learning Course Project
 
