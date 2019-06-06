@@ -1,0 +1,33 @@
+---
+title: "Treasury stuff"
+author: "kevin"
+date: "October 2, 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, warning = FALSE, message = FALSE}
+library(readxl)
+mydata <- read_xlsx("data.xlsx", 1)
+cor(mydata$'fed',mydata$'2y')
+cor(mydata$'fed',mydata$'5y')
+cor(mydata$'fed',mydata$'7y')
+cor(mydata$'fed',mydata$'10y')
+cor(mydata$'fed',mydata$'30y')
+mydata = mydata[which(!is.na(mydata$'c2y')),]
+covm = cov(t(rbind(mydata$'c2y',mydata$'c3y',mydata$'c5y',mydata$'c7y',mydata$'c10y',mydata$'c20y',mydata$'c30y')))
+mean = rbind(mean(mydata$'2y'),mean(mydata$'3y'),mean(mydata$'5y'),mean(mydata$'7y'),mean(mydata$'10y'),
+             mean(mydata$'20y'),mean(mydata$'30y'))
+e = eigen(covm)
+x = c(2,3,5,7,10,20,30)
+plot(x,(-1*e$vectors[,1]),type = 'l', lwd = 2, col = "red", ylim = c(-1,1))
+lines(x,(e$vectors[,2]),type = 'l', lwd = 2, col = "green")
+lines(x,e$vectors[,3],type = 'l', lwd = 2, col = "blue")
+legend("topright", c("1st order", "2nd order", "3rd order"), lty = c(1,1,1),
+       lwd = c(2,2,2),col = c("red", "green", "blue"))
+sum = sum(e$values)
+weights = c(e$values[1]/sum,e$values[2]/sum,e$values[3]/sum)
+```
